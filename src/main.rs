@@ -12,7 +12,7 @@ use std::path::PathBuf;
 #[command(about = "Calculate total size of files matching glob patterns")]
 #[command(version = "1.0")]
 #[command(
-    after_help = "EXAMPLES:\n  weight **/*.png **/*.jpg **/*.dds\n  weight -H -v *.png\n  weight --threads 4 **/*.rs\n\nNOTE: In Nushell, use separate patterns instead of brace expansion"
+    after_help = "EXAMPLES:\n  weight **/*.png **/*.jpg **/*.dds\n  weight -v *.png\n  weight --threads 4 **/*.rs\n\nNOTE: In Nushell, use separate patterns instead of brace expansion"
 )]
 struct Args {
     #[arg(required = true)]
