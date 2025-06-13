@@ -4,6 +4,8 @@ Allows you to quickly and easily calculate the size of all files even with deep 
 
 ## How to use
 
+`cargo install weight` or:
+
 `cargo install --git https://github.com/snatvb/weight.git`
 
 - `weight **/*.png **/_.jpg **/*.exe`
