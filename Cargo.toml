@@ -3,6 +3,8 @@ name = "weight"
 version = "1.0.0"
 edition = "2024"
 authors = ["Andrew Avsenin"]
+readme = "README.md"
+homepage = "https://github.com/snatvb/weight"
 
 [dependencies]
 anyhow = "1.0.98"
