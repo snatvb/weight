@@ -55,51 +55,49 @@ fn main() -> Result<()> {
             .context("Failed to set thread pool size")?;
     }
 
-    let all_candidate_paths: Vec<PathBuf> = args
-        .patterns
-        .par_iter()
-        .map(|pattern| {
-            if args.debug {
-                println!("{}: {}", "Processing pattern".yellow(), pattern.cyan());
-            }
+    let all_candidate_paths = args.patterns.par_iter().map(|pattern| -> Result<_> {
+        if args.debug {
+            println!("{}: {}", "Processing pattern".yellow(), pattern.cyan());
+        }
 
-            let paths =
-                glob(pattern).with_context(|| format!("Invalid glob pattern: {}", pattern))?;
+        let paths = glob(pattern).with_context(|| format!("Invalid glob pattern: {}", pattern))?;
 
-            let mut pattern_paths = Vec::new();
-            for path in paths {
-                match path {
-                    Ok(path) => {
-                        if args.debug {
-                            println!("  {} {}", "Found path:".blue(), path.display());
-                        }
-                        pattern_paths.push(path);
+        let mut pattern_paths = Vec::new();
+        for path in paths {
+            match path {
+                Ok(path) => {
+                    if args.debug {
+                        println!("  {} {}", "Found path:".blue(), path.display());
                     }
-                    Err(e) => {
-                        eprintln!(
-                            "{}: Error processing path: {}",
-                            "Warning".yellow().bold(),
-                            e
-                        );
-                    }
+                    pattern_paths.push(path);
+                }
+                Err(e) => {
+                    eprintln!(
+                        "{}: Error processing path: {}",
+                        "Warning".yellow().bold(),
+                        e
+                    );
                 }
             }
+        }
 
-            if args.debug {
-                println!(
-                    "  {} {} paths from pattern: {}",
-                    "Found".green(),
-                    pattern_paths.len().to_string().cyan(),
-                    pattern.cyan()
-                );
-            }
+        if args.debug {
+            println!(
+                "  {} {} paths from pattern: {}",
+                "Found".green(),
+                pattern_paths.len().to_string().cyan(),
+                pattern.cyan()
+            );
+        }
 
-            Ok(pattern_paths)
-        })
-        .collect::<Result<Vec<Vec<PathBuf>>>>()?
-        .into_iter()
-        .flatten()
-        .collect();
+        Ok(pattern_paths)
+    });
+
+    let all_candidate_paths: Vec<PathBuf> =
+        all_candidate_paths.try_reduce(Vec::new, |mut acc, item| {
+            acc.extend(item);
+            Ok(acc)
+        })?;
 
     if args.debug {
         println!(
