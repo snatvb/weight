@@ -1,6 +1,6 @@
 [package]
 name = "weight"
-version = "1.0.0"
+version = "1.0.1"
 edition = "2024"
 authors = ["Andrew Avsenin"]
 description = "Allows you to quickly and easily calculate the size of all files even with deep nesting"
